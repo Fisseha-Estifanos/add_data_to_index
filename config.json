@@ -1,7 +1,7 @@
 {
     "embedding_model": "openai",
     "dimension": 1024,
-    "collection_name": "text_embedding_3_large_1024_100_docs_wo_books",
+    "collection_name": "red",
     "vector_store": "qdrant",
     
     "record_manager_db_url": "sqlite:///record_manager_cache.sql",
@@ -32,7 +32,9 @@
 
                         "text_embedding_3_large_1024_homecoming_pdf",
                         "text_embedding_3_large_1024_homecoming_II",
-                        "text_embedding_3_large_1024_homecoming_md"],
+                        "text_embedding_3_large_1024_homecoming_md",
+                    
+                        "red"],
 
     "vector_stores": ["qdrant", "pgvector"]
 }
