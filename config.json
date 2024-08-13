@@ -2,7 +2,7 @@
     "embedding_model": "openai",
     "dimension": 1024,
     "collection_name": "text_embedding_3_large_1024_100_docs_wo_books",
-    "vector_store": "pgvector",
+    "vector_store": "qdrant",
     
     "record_manager_db_url": "sqlite:///record_manager_cache.sql",
     "chunking_size": 500,

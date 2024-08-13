@@ -125,12 +125,12 @@ async def _clear(vectorstore, record_manager):
 async def index_loaded_and_splitted_documents(vectorstore, record_manager):
     try:
         start_time = time.time()
-        document_path = "documents/cel_docs/second_additions/till_aug_2/"
+        document_path = "documents/cel_docs/second_additions/aug_9/"
         loaded_and_splitted_documents = await load_and_split_documents(
             path=document_path)
         print('Loading and splitting documents completed in: '
               + f'{round(time.time()-start_time, 2)} seconds')
-        # return
+        return
         start_time = time.time()
         returned_index = index(loaded_and_splitted_documents, record_manager,
                                vectorstore, cleanup="incremental",
