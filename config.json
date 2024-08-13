@@ -1,0 +1,38 @@
+{
+    "embedding_model": "openai",
+    "dimension": 1024,
+    "collection_name": "text_embedding_3_large_1024_100_docs_wo_books",
+    "vector_store": "pgvector",
+    
+    "record_manager_db_url": "sqlite:///record_manager_cache.sql",
+    "chunking_size": 500,
+    "chunking_overlap": 50,
+
+    
+
+    "embedding_models": ["openai",
+                         "ollama",
+                         "MedCPT-Article-Encoder"],
+    "ollama_embedding_model_name": "mxbai-embed-large",
+    "ollama_embedding_model_names": ["llama3",
+                                    "mxbai-embed-large"],
+
+    "dimensions": [1536,
+                   4096],
+
+    "collection_names": ["test_collection",
+                        "initial_collection_4096",
+                        "1024_mxbai-embed-large",
+                        "second_additions_1024_mxbai-embed-large",
+                        "text_embedding_3_large_1024_10_docs",
+                        "text_embedding_3_large_1024_25_docs",
+                        "text_embedding_3_large_1024_50_docs",
+                        "text_embedding_3_large_1024_100_docs",
+                        "text_embedding_3_large_1024_100_docs_wo_books",
+
+                        "text_embedding_3_large_1024_homecoming_pdf",
+                        "text_embedding_3_large_1024_homecoming_II",
+                        "text_embedding_3_large_1024_homecoming_md"],
+
+    "vector_stores": ["qdrant", "pgvector"]
+}
