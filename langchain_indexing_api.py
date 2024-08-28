@@ -49,10 +49,10 @@ async def initialize_vector_store(use_local_vector_store: bool = True):
                 qdrant_client = QdrantClient(url=vector_store_url,
                                              timeout=600)
             else:
-                vector_store_url = os.environ['QDRANT_CLOUD_URL']
+                vector_store_url = os.environ['QDRANT_CLOUD_URL_RIZZBUZZ']
                 qdrant_client = QdrantClient(
                     url=vector_store_url,
-                    api_key=os.environ['QDRANT_API_KEY'],
+                    api_key=os.environ['QDRANT_API_KEY_RIZZBUZZ'],
                     timeout=600)
             vectorstore = Qdrant(client=qdrant_client,
                                  collection_name=collection_name,
@@ -125,7 +125,7 @@ async def _clear(vectorstore, record_manager):
 async def index_loaded_and_splitted_documents(vectorstore, record_manager):
     try:
         start_time = time.time()
-        document_path = "documents/red_nucleus/"
+        document_path = "documents/cel_docs/second_additions/aug_28/"
         loaded_and_splitted_documents = await load_and_split_documents(
             path=document_path)
         print('Loading and splitting documents completed in: '
