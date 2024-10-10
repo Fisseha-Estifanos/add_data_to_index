@@ -58,7 +58,8 @@ async def load_document_data_from_file(
                 pages = loader.load_and_split(text_splitter=text_splitter)
                 print(f"---> type of loader: {type(loader)}")
                 print(f"---> length of pages: {len(pages)}")
-                print(f"---> type of pages: {type(pages)}\n\n")
+                print(f"---> type of a single page: {type(pages[0])}")
+                print(f"---> type of pages: {type(pages)}\n\n")  # list
                 return pages
             else:
                 print(f"---> directory_path: {path}")
@@ -171,80 +172,129 @@ def get_all_file_names(directory):
 # list_pdf_pages(directory_to_check, 100)
 
 
-# # region FIND_DUPLICATE
-# # function to determine duplicate pdf content in a folder
-# def find_duplicate_pdfs(directory):
-#     # Check if the provided directory exists
-#     if not os.path.isdir(directory):
-#         print(f"The directory '{directory}' does not exist.")
-#         return
+# region FIND_DUPLICATE
+# function to determine duplicate pdf content in a folder
+def find_duplicate_pdfs(directory):
+    # Check if the provided directory exists
+    if not os.path.isdir(directory):
+        print(f"The directory '{directory}' does not exist.")
+        return
 
-#     # Dictionary to store files by their size
-#     size_dict = {}
+    # Dictionary to store files by their size
+    size_dict = {}
 
-#     # List all files in the directory
-#     files = os.listdir(directory)
+    # List all files in the directory
+    files = os.listdir(directory)
 
-#     # Filter PDF files and group them by size
-#     for file in files:
-#         if file.endswith(".pdf"):
-#             file_path = os.path.join(directory, file)
-#             file_size = os.path.getsize(file_path)
+    # Filter PDF files and group them by size
+    for file in files:
+        if file.endswith(".pdf"):
+            file_path = os.path.join(directory, file)
+            file_size = os.path.getsize(file_path)
 
-#             if file_size in size_dict:
-#                 size_dict[file_size].append(file)
-#             else:
-#                 size_dict[file_size] = [file]
+            if file_size in size_dict:
+                size_dict[file_size].append(file)
+            else:
+                size_dict[file_size] = [file]
 
-#     # Open the CSV file for writing
-#     with open("duplicated_files.csv", mode="w", newline="") as csv_file:
-#         csv_writer = csv.writer(csv_file)
-#         csv_writer.writerow(["File Size (bytes)", "File 1", "File 2"])
+    # Open the CSV file for writing
+    with open("duplicated_files.csv", mode="w", newline="") as csv_file:
+        csv_writer = csv.writer(csv_file)
+        csv_writer.writerow(["File Size (bytes)", "File 1", "File 2"])
 
-#         # Iterate through size_dict to find files with the same size
-#         for file_size, file_list in size_dict.items():
-#             if len(file_list) > 1:
-#                 # Compare the content of PDFs with the same size
-#                 for i in range(len(file_list)):
-#                     for j in range(i + 1, len(file_list)):
-#                         file1_path = os.path.join(directory, file_list[i])
-#                         file2_path = os.path.join(directory, file_list[j])
+        # Iterate through size_dict to find files with the same size
+        for file_size, file_list in size_dict.items():
+            if len(file_list) > 1:
+                # Compare the content of PDFs with the same size
+                for i in range(len(file_list)):
+                    for j in range(i + 1, len(file_list)):
+                        file1_path = os.path.join(directory, file_list[i])
+                        file2_path = os.path.join(directory, file_list[j])
 
-#                         if are_pdfs_identical(file1_path, file2_path):
-#                             # Write the identical files to the CSV file
-#                             csv_writer.writerow([file_size, file_list[i], file_list[j]])
-#                             print(
-#                                 f"\nDuplicate found::- {file_list[i]} and {file_list[j]}"
-#                             )
-
-
-# def are_pdfs_identical(file1_path, file2_path):
-#     try:
-#         with open(file1_path, "rb") as pdf1, open(file2_path, "rb") as pdf2:
-#             reader1 = PdfReader(pdf1)
-#             reader2 = PdfReader(pdf2)
-
-#             # Compare the number of pages
-#             if len(reader1.pages) != len(reader2.pages):
-#                 return False
-
-#             # Compare the content of each page
-#             for page_num in range(len(reader1.pages)):
-#                 page1_text = reader1.pages[page_num].extract_text()
-#                 page2_text = reader2.pages[page_num].extract_text()
-
-#                 if page1_text != page2_text:
-#                     return False
-
-#             return True
-#     except Exception as e:
-#         print(f"Error comparing {file1_path} and {file2_path}: {e}")
-#         return False
+                        if are_pdfs_identical(file1_path, file2_path):
+                            # Write the identical files to the CSV file
+                            csv_writer.writerow([file_size, file_list[i], file_list[j]])
+                            print(
+                                f"\nDuplicate found::- {file_list[i]} and {file_list[j]}"
+                            )
 
 
-# directory = "documents/cel_docs/second_additions/all_remaining_docs/"
-# find_duplicate_pdfs(directory)
-# # endregion FIND_DUPLICATE
+def are_pdfs_identical(file1_path, file2_path):
+    try:
+        with open(file1_path, "rb") as pdf1, open(file2_path, "rb") as pdf2:
+            reader1 = PdfReader(pdf1)
+            reader2 = PdfReader(pdf2)
+
+            # Compare the number of pages
+            if len(reader1.pages) != len(reader2.pages):
+                return False
+
+            # Compare the content of each page
+            for page_num in range(len(reader1.pages)):
+                page1_text = reader1.pages[page_num].extract_text()
+                page2_text = reader2.pages[page_num].extract_text()
+
+                if page1_text != page2_text:
+                    return False
+
+            return True
+    except Exception as e:
+        print(f"Error comparing {file1_path} and {file2_path}: {e}")
+        return False
+
+
+# # directory = "documents/cel_docs/second_additions/all_remaining_docs/"
+# # find_duplicate_pdfs(directory)
+# endregion FIND_DUPLICATE
+
+
+# region DELETE_DUPLICATES
+def delete_files_from_csv(csv_path, directory):
+    # Check if the CSV file exists
+    if not os.path.isfile(csv_path):
+        print(f"The CSV file '{csv_path}' does not exist.")
+        return
+
+    # Check if the directory exists
+    if not os.path.isdir(directory):
+        print(f"The directory '{directory}' does not exist.")
+        return
+
+    # Initialize a counter for logging
+    count = 0
+
+    # Open the CSV file and read the 'File 2' column
+    with open(csv_path, mode="r") as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+
+        # Iterate through each row in the CSV file
+        for row in csv_reader:
+            file_to_delete = row["File 2"]
+            file_path = os.path.join(directory, file_to_delete)
+
+            # Check if the file exists before attempting to delete it
+            if os.path.isfile(file_path):
+                try:
+                    # Delete the file
+                    os.remove(file_path)
+                    count += 1
+                    # Log the deletion
+                    print(f"{count}. Deleted: {file_to_delete}")
+                except Exception as e:
+                    print(f"Error deleting {file_to_delete}: {e}")
+            else:
+                print(f"File not found: {file_to_delete}")
+
+    if count == 0:
+        print("No files were deleted.")
+    else:
+        print(f"\nTotal files deleted: {count}")
+
+
+# csv_file_path = "/Users/admin/Documents/Jacques/add_data_to_index/documents/cel_docs/second_additions/all_remaining_docs/duplicated_files.csv"
+# directory_t0_delete_files_from = "/Users/admin/Documents/Jacques/add_data_to_index/documents/cel_docs/second_additions/all_remaining_docs/"
+# delete_files_from_csv(csv_file_path, directory_t0_delete_files_from)
+# endregion DELETE_DUPLICATES
 
 
 def setup_langsmith_api_keys():
@@ -253,14 +303,16 @@ def setup_langsmith_api_keys():
     os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
 
 
-def get_config_variable(parameter_name: str = "", file_path: str = "config.json"):
+def get_config_variable(
+    parameter_name: str = "", file_path: str = "config.json"
+):  # noqa E501
     try:
         with open(file_path, "r") as json_file:
             data = json.load(json_file)
             if parameter_name in data:
                 return data[parameter_name]
             else:
-                return f"Parameter '{parameter_name}' not found in the config file."
+                return f"Parameter '{parameter_name}' not found in the config file."  # noqa E501
     except FileNotFoundError:
         return "JSON file not found."
     except json.JSONDecodeError:
@@ -297,7 +349,7 @@ def move_files_to_main_folder(initial_folder):
                 print(f"Error removing directory {root}: {e}")
 
 
-# initial_folder_path = "../cellectra_documents/Journal Articles duplicate all files in one folder/"
+# initial_folder_path = "../cellectra_documents/Journal Articles duplicate all files in one folder/"        # noqa E501
 # move_files_to_main_folder(initial_folder_path)
 
 
@@ -330,7 +382,7 @@ def gather_file_info(folder_path, output_csv):
     print(f"File information written to {output_csv}")
 
 
-# folder_path = "documents/cel_docs/second_additions/aug_28/"
+# folder_path = "documents/cel_docs/second_additions/all_remaining_docs/"
 # output_csv = f"{folder_path+'file_info.csv'}"
 # gather_file_info(folder_path, output_csv)
 
